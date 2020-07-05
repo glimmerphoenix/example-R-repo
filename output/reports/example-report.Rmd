@@ -1,0 +1,57 @@
+---
+title: "Example Report ACME Telephone ABT"
+author: "Felipe Ortega"
+date: "5/7/2020"
+output: bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+library(partykit)
+library(rpart)
+library(rpart.plot)
+```
+
+# Model variables
+
+**Input variables** for the models are:
+
+* `avgrecurringCharge`: Average value of recurring bill charge to company clients.
+* `avgOverBundleMins`: Excess of minutes in calls over the max. value allowed in
+current service plan for this client.
+* `binary_billAmountChangePct`: Binary tag checking whether the percentage change
+in total bill amount with respec to to previous month is `positive` or `negative`.
+* `lastMonthCustomerCareCalls`: Number of calls from client to customer care
+service over the last month.
+* `peakOffPeakRatio`: Ratio between peak and off-peak calls for this customer in
+this month.
+* `smartPhone`: Binary tag, checking whether the client has a smartphone (`TRUE`)
+or not (`FALSE`).
+
+**Output variable** is `churn`, tagging clients as kept (`0`) or gone (`1`).
+
+# First decision tree model
+
+```{r ctree-model, fig.cap="First classification tree."}
+ctree_acme = readRDS(here("output", "models", "ctree_acme.rds"))
+
+print(ctree_acme)
+plot(ctree_acme, gp = gpar(fontsize = 10),
+     inner_panel=node_inner,
+     ip_args=list(
+       abbreviate = TRUE, 
+       id = FALSE)
+)
+```
+
+
+# Second decision tree model
+
+```{r rpart-tree, fig.cap="Second classification tree."}
+rpart_acme = readRDS(here("output", "models", "rpart_acme.rds"))
+
+summary(rpart_acme)
+rpart.plot(rpart_acme)
+```
+
