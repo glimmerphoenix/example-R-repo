@@ -8,6 +8,7 @@ library(rpart)
 library(rpart.plot)
 
 # Set up simple logger
+# Configure the logger at DEBUG level
 log_file = here("src", "log-simple-analysis.log")
 logger <- logger("DEBUG", appenders = file_appender(log_file))
 
